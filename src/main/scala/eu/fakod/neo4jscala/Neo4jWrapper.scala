@@ -153,7 +153,7 @@ object Neo4jWrapper extends Neo4jWrapperImplicits {
     }
 
   private def _toCCPossible[T: Manifest](pc: PropertyContainer): Option[Class[_]] = {
-    for (cpn <- pc[String](ClassPropertyName); c = Class.forName(cpn) if (manifest[T].erasure.isAssignableFrom(c)))
+    for (cpn <- pc[String](ClassPropertyName); c = Class.forName(cpn) if (manifest[T].runtimeClass.isAssignableFrom(c)))
       return Some(c)
     None
   }
@@ -177,7 +177,7 @@ object Neo4jWrapper extends Neo4jWrapperImplicits {
     toCC[T](pc) match {
       case Some(t) => t
       case _ => throw new IllegalArgumentException("given Case Class: " +
-        manifest[T].erasure.getName + " does not fit to serialized properties")
+        manifest[T].runtimeClass.getName + " does not fit to serialized properties")
     }
   }
 }

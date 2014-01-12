@@ -146,6 +146,7 @@
                         <arg>-feature</arg>
                         <arg>-Xlint</arg>
                         <arg>-unchecked</arg>
+                        <arg>-deprecation</arg>
                     </args>
                     <jvmArgs>
                         <jvmArg>-Xms64m</jvmArg>
