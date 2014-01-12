@@ -2,6 +2,8 @@ package eu.fakod.neo4jscala.util
 package scalax
 package rules
 
+import scala.language.{implicitConversions, postfixOps, reflectiveCalls}
+
 trait Name {
   def name: String
 
@@ -66,7 +68,7 @@ trait Rules {
 
 /**A factory for rules that apply to a particular context.
  *
- * @requires S the context to which rules apply.
+ * requires S the context to which rules apply.
  *
  * @author Andrew Foggin
  *
