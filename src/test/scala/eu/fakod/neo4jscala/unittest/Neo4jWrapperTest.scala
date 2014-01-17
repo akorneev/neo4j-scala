@@ -1,9 +1,12 @@
 package eu.fakod.neo4jscala.unittest
 
-import org.neo4j.graphdb._
-import org.specs2.mutable.SpecificationWithJUnit
+import scala.sys.ShutdownHookThread
+
 import eu.fakod.neo4jscala.{EmbeddedGraphDatabaseServiceProvider, Neo4jWrapper}
-import sys.ShutdownHookThread
+import org.neo4j.graphdb._
+import org.neo4j.graphdb.traversal.{BranchState, Evaluation}
+import org.neo4j.kernel.Traversal
+import org.specs2.mutable.SpecificationWithJUnit
 
 /**
  * Test spec to check relationship builder and evaluators
@@ -167,6 +170,36 @@ class Neo4jWrapperSpec extends SpecificationWithJUnit with Neo4jWrapper with Emb
         val traverser = start.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, (tp: TraversalPosition) => tp.notStartNode(), DynamicRelationshipType.withName("foo"), Direction.OUTGOING)
         traverser.iterator.hasNext must beEqualTo(true)
         traverser.iterator.next must beEqualTo(end)
+      }
+    }
+
+    "allow writing evaluators for a new traversal framework in a functional style" in {
+      withTx {
+        implicit neo =>
+          val start, end = createNode
+          val rel = start.createRelationshipTo(end, DynamicRelationshipType.withName("foo"))
+          val traversal = Traversal.description()
+            .breadthFirst()
+            .evaluator((p: Path) => if (p.length() > 0) Evaluation.INCLUDE_AND_CONTINUE else Evaluation.EXCLUDE_AND_CONTINUE)
+            .relationships(DynamicRelationshipType.withName("foo"), Direction.OUTGOING)
+          val traverser = traversal.traverse(start)
+          traverser.nodes.iterator.hasNext must beEqualTo(true)
+          traverser.nodes.iterator.next must beEqualTo(end)
+      }
+    }
+
+    "allow writing path evaluators for a new traversal framework in a functional style" in {
+      withTx {
+        implicit neo =>
+          val start, end = createNode
+          val rel = start.createRelationshipTo(end, DynamicRelationshipType.withName("foo"))
+          val traversal = Traversal.description()
+            .breadthFirst()
+            .evaluator((p: Path, b: BranchState[_]) => if (p.length() > 0) Evaluation.INCLUDE_AND_CONTINUE else Evaluation.EXCLUDE_AND_CONTINUE)
+            .relationships(DynamicRelationshipType.withName("foo"), Direction.OUTGOING)
+          val traverser = traversal.traverse(start)
+          traverser.nodes.iterator.hasNext must beEqualTo(true)
+          traverser.nodes.iterator.next must beEqualTo(end)
       }
     }
   }
