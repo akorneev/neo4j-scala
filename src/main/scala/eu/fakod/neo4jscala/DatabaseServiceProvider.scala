@@ -1,10 +1,10 @@
 package eu.fakod.neo4jscala
 
-import org.neo4j.kernel.EmbeddedGraphDatabase
+import java.net.URI
+
+import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.neo4j.kernel.impl.batchinsert.{BatchInserter, BatchInserterImpl}
 import org.neo4j.rest.graphdb.RestGraphDatabase
-import java.net.URI
-import java.util.{HashMap => jMap}
 
 /**
  * Interface for a GraphDatabaseServiceProvider
@@ -37,9 +37,9 @@ trait EmbeddedGraphDatabaseServiceProvider extends GraphDatabaseServiceProvider 
    */
   val ds: DatabaseService = {
     import collection.JavaConversions.mapAsJavaMap
-    DatabaseServiceImpl(
-      new EmbeddedGraphDatabase(neo4jStoreDir, new jMap[String, String](configParams))
-    )
+    val builder = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(neo4jStoreDir)
+    builder.setConfig(configParams)
+    DatabaseServiceImpl(builder.newGraphDatabase())
   }
 }
 
@@ -53,9 +53,9 @@ private[neo4jscala] object SingeltonProvider {
     case Some(x) => x
     case None =>
       import collection.JavaConversions.mapAsJavaMap
-      ds = Some(DatabaseServiceImpl(new EmbeddedGraphDatabase(
-        neo4jStoreDir, new jMap[String, String](configParams)))
-      )
+      val builder = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(neo4jStoreDir)
+      builder.setConfig(configParams)
+      ds = Some(DatabaseServiceImpl(builder.newGraphDatabase()))
       ds.get
   }
 }
