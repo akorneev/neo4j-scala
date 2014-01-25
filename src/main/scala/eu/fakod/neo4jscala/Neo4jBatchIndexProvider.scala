@@ -7,7 +7,6 @@ import org.neo4j.graphdb.index._
 import org.neo4j.graphdb._
 import org.neo4j.index.impl.lucene.{AbstractIndexHits, LuceneBatchInserterIndexProvider}
 import collection.JavaConversions._
-import sun.reflect.generics.reflectiveObjects.NotImplementedException
 import collection.mutable.{SynchronizedMap, ConcurrentMap, HashMap}
 
 /**
@@ -70,27 +69,27 @@ class BatchIndexManager(bi: BatchInserter) extends IndexManager {
    */
   def shutdown() = batchInserterIndexProvider.shutdown
 
-  def existsForNodes(indexName: String) = throw new NotImplementedException
+  def existsForNodes(indexName: String): Boolean = ???
 
-  def forNodes(indexName: String) = throw new NotImplementedException
+  def forNodes(indexName: String): Index[Node] = ???
 
-  def nodeIndexNames() = throw new NotImplementedException
+  def nodeIndexNames(): Array[String] = ???
 
-  def existsForRelationships(indexName: String) = throw new NotImplementedException
+  def existsForRelationships(indexName: String): Boolean = ???
 
-  def forRelationships(indexName: String) = throw new NotImplementedException
+  def forRelationships(indexName: String): RelationshipIndex = ???
 
-  def relationshipIndexNames() = throw new NotImplementedException
+  def relationshipIndexNames(): Array[String] = ???
 
-  def getConfiguration(index: Index[_ <: PropertyContainer]) = throw new NotImplementedException
+  def getConfiguration(index: Index[_ <: PropertyContainer]): juMap[String, String] = ???
 
-  def setConfiguration(index: Index[_ <: PropertyContainer], key: String, value: String) = throw new NotImplementedException
+  def setConfiguration(index: Index[_ <: PropertyContainer], key: String, value: String): String = ???
 
-  def removeConfiguration(index: Index[_ <: PropertyContainer], key: String) = throw new NotImplementedException
+  def removeConfiguration(index: Index[_ <: PropertyContainer], key: String): String = ???
 
-  def getNodeAutoIndexer = throw new NotImplementedException
+  def getNodeAutoIndexer: AutoIndexer[Node] = ???
 
-  def getRelationshipAutoIndexer = throw new NotImplementedException
+  def getRelationshipAutoIndexer: RelationshipAutoIndexer = ???
 }
 
 private[neo4jscala] trait IndexCacheHelper {
@@ -145,31 +144,21 @@ class BatchIndex(bii: BatchInserterIndex, bi: BatchInserter) extends Index[Node]
 
   def isWriteable = false
 
-  def remove(entity: Node, key: String, value: AnyRef) {
-    throw new NotImplementedException
-  }
+  def remove(entity: Node, key: String, value: AnyRef): Unit = ???
 
-  def remove(entity: Node, key: String) {
-    throw new NotImplementedException
-  }
+  def remove(entity: Node, key: String): Unit = ???
 
-  def remove(entity: Node) {
-    throw new NotImplementedException
-  }
+  def remove(entity: Node): Unit = ???
 
-  def delete() {
-    throw new NotImplementedException
-  }
+  def delete(): Unit = ???
 
-  def putIfAbsent(entity: Node, key: String, value: AnyRef): Node = {
-    throw new NotImplementedException
-  }
+  def putIfAbsent(entity: Node, key: String, value: AnyRef): Node = ???
 
   def getGraphDatabase: GraphDatabaseService = gds
 
-  def getName = throw new NotImplementedException
+  def getName: String = ???
 
-  def getEntityType = throw new NotImplementedException
+  def getEntityType: Class[Node] = ???
 }
 
 /**
@@ -207,37 +196,27 @@ class BatchRelationshipIndex(bii: BatchInserterIndex, bi: BatchInserter) extends
 
   def isWriteable = false
 
-  def remove(entity: Relationship, key: String, value: AnyRef) {
-    throw new NotImplementedException
-  }
+  def remove(entity: Relationship, key: String, value: AnyRef): Unit = ???
 
-  def remove(entity: Relationship, key: String) {
-    throw new NotImplementedException
-  }
+  def remove(entity: Relationship, key: String): Unit = ???
 
-  def remove(entity: Relationship) {
-    throw new NotImplementedException
-  }
+  def remove(entity: Relationship): Unit = ???
 
-  def delete() {
-    throw new NotImplementedException
-  }
+  def delete(): Unit = ???
 
-  def putIfAbsent(entity: Relationship, key: String, value: AnyRef): Relationship = {
-    throw new NotImplementedException
-  }
+  def putIfAbsent(entity: Relationship, key: String, value: AnyRef): Relationship = ???
 
   def getGraphDatabase: GraphDatabaseService = gds
 
-  def getName = throw new NotImplementedException
+  def getName: String = ???
 
-  def getEntityType = throw new NotImplementedException
+  def getEntityType: Class[Relationship] = ???
 
-  def get(key: String, valueOrNull: AnyRef, startNodeOrNull: Node, endNodeOrNull: Node) = throw new NotImplementedException
+  def get(key: String, valueOrNull: AnyRef, startNodeOrNull: Node, endNodeOrNull: Node): IndexHits[Relationship] = ???
 
-  def query(key: String, queryOrQueryObjectOrNull: AnyRef, startNodeOrNull: Node, endNodeOrNull: Node) = throw new NotImplementedException
+  def query(key: String, queryOrQueryObjectOrNull: AnyRef, startNodeOrNull: Node, endNodeOrNull: Node): IndexHits[Relationship] = ???
 
-  def query(queryOrQueryObjectOrNull: AnyRef, startNodeOrNull: Node, endNodeOrNull: Node) = throw new NotImplementedException
+  def query(queryOrQueryObjectOrNull: AnyRef, startNodeOrNull: Node, endNodeOrNull: Node): IndexHits[Relationship] = ???
 }
 
 /**
